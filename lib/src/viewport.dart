@@ -235,6 +235,23 @@ class UnboundedRenderViewport extends RenderViewport {
     // to the zero scroll offset (the line between the forward slivers and the
     // reverse slivers).
     final double centerOffset = mainAxisExtent * anchor - correctedOffset;
+
+    /// You can uncomment these lines of code to see my workaround
+    if (leadingOffset + centerBodyOffset + trailingOffset > 0) {
+      if (leadingOffset + centerBodyOffset + trailingOffset < mainAxisExtent) {
+        centerOffset = math.max(
+          leadingOffset,
+          mainAxisExtent * anchor - centerBodyOffset - trailingOffset,
+        );
+      } else {
+        centerOffset = centerOffset.clamp(
+          mainAxisExtent - centerBodyOffset - trailingOffset,
+          leadingOffset +
+              (leadingOffset > mainAxisExtent ? mainAxisExtent * anchor : 0),
+        );
+      }
+    }
+    
     final double reverseDirectionRemainingPaintExtent =
         centerOffset.clamp(0.0, mainAxisExtent);
     final double forwardDirectionRemainingPaintExtent =
