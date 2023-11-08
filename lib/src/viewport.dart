@@ -231,6 +231,17 @@ class UnboundedRenderViewport extends RenderViewport {
     _maxScrollExtent = 0.0;
     _hasVisualOverflow = false;
 
+    final RenderSliver? leadingNegativeChild = childBefore(center!);
+    final RenderSliver? trailingPositiveChild = childAfter(center!);
+    final double leadingOffset = (leadingNegativeChild != null
+        ? leadingNegativeChild.geometry?.scrollExtent ?? 0
+        : 0);
+    final double trailingOffset = (trailingPositiveChild != null
+        ? trailingPositiveChild.geometry?.scrollExtent ?? 0
+        : 0);
+    final double centerBodyOffset =
+    (center != null ? center!.geometry?.scrollExtent ?? 0 : 0);
+
     // centerOffset is the offset from the leading edge of the RenderViewport
     // to the zero scroll offset (the line between the forward slivers and the
     // reverse slivers).
